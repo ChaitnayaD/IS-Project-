@@ -26,11 +26,11 @@ def login():
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
-            session['userid'] = users['userid']
-            session['name'] = users['name']
-            session['email'] = users['email']
-            mesage = 'Logged in successfully !'
-            return jsonify(mesage)
+            session['userid'] = account['userid']
+           # session['name'] = account['name']
+            session['email'] = account['email']
+            mesage = "success"
+            return jsonify([mesage])
         else:
             mesage = 'Please enter correct email / password !'
             print("Unsucessful") 
@@ -47,26 +47,26 @@ def logout():
 @app.route('/register', methods =['GET', 'POST'])
 def register():
     mesage = ''
-    if request.method == 'POST' and 'name' in request.form and 'password' in request.form and 'email' in request.form :
-        userName = request.form['name']
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
+        username = request.form['username']
         password = request.form['password']
         email = request.form['email']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM users WHERE email = % s', (email, ))
         account = cursor.fetchone()
         if account:
-            mesage = 'Account already exists !'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            mesage = 'Invalid email address !'
-        elif not userName or not password or not email:
-            mesage = 'Please fill out the form !'
+            mesage = "Account already exists"
+        #elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            #mesage = "Invalid email address !"
+        elif not username or not password or not email:
+            mesage = "Please fill out the form !"
         else:
-            cursor.execute('INSERT INTO users VALUES (NULL, % s, % s, % s)', (userName, email, password, ))
+            cursor.execute('INSERT INTO users VALUES (NULL, % s, % s, % s)', (username, email, password ))
             mysql.connection.commit()
-            mesage = 'You have successfully registered !'
-    elif request.method == 'POST':
-        mesage = 'Please fill out the form !'
-    return  jsonify(mesage)
+            mesage = "Registered"
+    #elif request.method == 'POST':
+       # mesage = 'Please fill out the form !'
+    return  jsonify([mesage])
     
 if __name__ == "__main__":
     app.run()
