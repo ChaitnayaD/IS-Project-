@@ -1,13 +1,13 @@
-from flask import Flask,render_template,jsonify,  request, redirect, url_for, session
+from flask import Flask, flash,render_template,jsonify,  request, redirect, url_for, session,flash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-  
+
 app = Flask(__name__)
   
 app.secret_key = 'xyzsdfg'
   
-app.config['MYSQL_HOST'] = '10.29.8.214'
+app.config['MYSQL_HOST'] = '10.29.8.22'
 app.config['MYSQL_USER'] = 'chaitanya'
 app.config['MYSQL_PASSWORD'] = 'chaitanya'
 app.config['MYSQL_DB'] = 'user'
@@ -22,9 +22,9 @@ def login():
         email = request.form['email']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE email = % s AND password = % s', (email, password, ))
-        user = cursor.fetchone()
-        if user:
+        cursor.execute('SELECT * FROM users WHERE email = % s AND password = % s', (email, password))
+        account = cursor.fetchone()
+        if account:
             session['loggedin'] = True
             session['userid'] = users['userid']
             session['name'] = users['name']
@@ -34,7 +34,7 @@ def login():
         else:
             mesage = 'Please enter correct email / password !'
             print("Unsucessful") 
-            flash("You are successfully login into the Flask Application")
+            #flash("You are successfully login into the Flask Application")
     return  jsonify(mesage)
   
 @app.route('/logout')
