@@ -35,14 +35,16 @@ def login():
             mesage = 'Please enter correct email / password !'
             print("Unsucessful") 
             #flash("You are successfully login into the Flask Application")
-    return  jsonify(mesage)
+    return  jsonify([mesage])
   
-@app.route('/logout')
+@app.route('/logout',methods =['GET'])
 def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('email', None)
-    return redirect(url_for('login'))
+    mesage = "Logged Out"
+    #print("Logged Out")
+    return  jsonify([mesage])
   
 @app.route('/register', methods =['GET', 'POST'])
 def register():
